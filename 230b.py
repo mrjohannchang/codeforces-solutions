@@ -1,21 +1,21 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-n = int(10**6)
-s = range(3, n + 1, 2)
-primes, i, v = [2], 0, 3
-slen = len(s)
-while v < n:
-    if s[i]:
-        primes.append(s[i])
-        j = i + v
-        while j < slen:
-            s[j] = 0
-            j += v
-    i += 1
-    v = 2 * i + 3
-input()
-for x in map(int, raw_input().split()):
-    if x**0.5 in primes:
-        print 'YES'
-    else:
-        print 'NO'
+
+
+def gen_primes(upper_bound):
+    upper_bound += 1
+    t = [0] * (upper_bound)
+    primes = [2]
+    for i in range(3, upper_bound, 2):
+        if t[i]: continue
+        primes.append(i)
+        for j in range(i + i, upper_bound, i): t[j] = 1
+    return primes
+
+def main():
+    tprimes = set([p * p for p in gen_primes(int(1E6))])
+    _ = input()
+    x = list(map(int, input().split()))
+    print('\n'.join('YES' if i in tprimes else 'NO' for i in x))
+
+if __name__ == '__main__':
+    main()
