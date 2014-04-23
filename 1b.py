@@ -1,46 +1,48 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-n = input()
 
-for _ in xrange(n):
-    s = raw_input()
-    i = s.find('C')
-    if s.find('C') > 1 and 
 
-a = None
-exrc = 'ABDEFGHIJKLMNOPQSTUVWXYZ'
-az = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-for _ in xrange(n):
-    inp = raw_input()
-    if len(inp) >= 4 and inp[0] == 'R' and inp[1] != 'C' \
-            and inp.count('R') == 1 and inp.count('C') == 1 \
-            and len(set(exrc) & set(inp)) == 0:
-        r, c = int(inp[1:inp.index('C')]), int(inp[inp.index('C')+1:])
-        i = 0
-        while True:
-            if 26 * (26**i) >= c:
-                break
-            i += 1
-        buf = []
-        for j in xrange(i, -1, -1):
-            for k in xrange(1, 27):
-                if k * 26**j > c:
-                    buf.append(k-1)
-                    c -= (k - 1) * 26**j
-                    break
-            if c == 0:
-                break
-        cv = []
-        for i in buf:
-            cv.append(az[i-1])
-        print ''.join(cv) + str(r)
+def is_rxcy(coordinate):
+    if coordinate[0] == 'R' and coordinate[1] in '0123456789':
+        if 'C' in coordinate:
+            return True
+    return False
+
+def rxcy_to_excel(coordinate):
+    SYMBOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    row = coordinate[1:coordinate.rindex('C')]
+    column = int(coordinate[coordinate.rindex('C')+1:])
+    res = [row]
+
+    while column > 0:
+        column -= 1
+        res = [SYMBOL[column % 26]] + res
+        column = column // 26
+
+    return ''.join(res)
+
+def excel_to_rxcy(coordinate):
+    SYMBOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    for i in range(len(coordinate)):
+        if coordinate[i] not in SYMBOL:
+            break
+    row = coordinate[i:]
+    column = coordinate[:i]
+    res = 'R' + row + 'C'
+
+    t = 0
+    for c in column:
+        t = t * 26 + SYMBOL.index(c) + 1
+    res += str(t)
+
+    return res
+
+ans = []
+
+for _ in range(int(input())):
+    coordinate = input()
+    if is_rxcy(coordinate):
+        ans.append(rxcy_to_excel(coordinate))
     else:
-        for i in xrange(len(inp)):
-            if inp[i] in '0123456789':
-                break
-        c, r = inp[:i], inp[i:]
-        cv = 0
-        c = c[-1::-1]
-        for i in xrange(len(c)):
-            cv += (ord(c[i]) - 64) * 26**i
-        print 'R' + str(r) + 'C' + str(cv)
+        ans.append(excel_to_rxcy(coordinate))
+
+print('\n'.join(ans))
