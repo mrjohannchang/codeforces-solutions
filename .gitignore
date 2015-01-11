@@ -1,0 +1,16 @@
+# Binary
+*
+!*.*
+
+# C/C++
+*.o
+
+# Java
+*.class
+
+# Python
+*.py[A-Za-z]
+
+# Vim
+.*.swp
+*.orig
